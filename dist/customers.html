@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PHENIX|Customer</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome-free-5.8.2-web/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<!-----------------nav_st------------------------------->
+<nav class="navbar m_navbar fixed-top">
+    <div id="logo">
+    </div>
+    <div id="acc"></div>
+</nav>
+<div id="side_nav">
+
+    <ul>
+        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i>DashBoard</a></li>
+        <li><a href="customers.html" class="m_active"><i class="fas fa-users"></i>Customers</a></li>
+        <li><a href="items.html"><i class="fas fa-cubes"></i>Items</a></li>
+        <li><a href="orders.html"><i class="fas fa-notes-medical"></i>Order</a></li>
+        <li><a href="reports.html"><i class="fas fa-chart-line"></i>Reports</a></li>
+    </ul>
+
+</div>
+<!--------------------Body------------------------------>
+<div class="m_content">
+        <div class="card-header">
+            <h3>Customer Manager</h3>
+        </div>
+        <div class="m_card">
+            <form id="customer-form">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Customer ID</label>
+                        <input id="custID" type="text" name="cid" class="form-control" placeholder="ID">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Name</label>
+                        <input id="name" type="text" name="name" class="form-control" placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" class="form-control" name="address" id="inputAddress" placeholder="1234 Main St">
+                </div>
+                <div class="form-group">
+                        <label>Salary</label>
+                        <input id="email" type="email" name="salary" class="form-control" placeholder="E-mail">
+                </div>
+
+                <button id="add" type="button" class="btn btn-primary">ADD</button>
+                <button id="update" type="button" class="btn btn-success">UPDATE</button>
+                <button id="cancel" type="button" class="btn btn-secondary">CANCEL</button>
+                <button id="delete" type="button" class="btn btn-danger">DELETE</button>
+            </form>
+        </div>
+
+        <div class="card-header">
+            <h3>Customers</h3>
+        </div>
+        <div class="m_card">
+            <form action="">
+                <div class="form-row">
+                    <div class="form-group col-3 float-left">
+                        <input type="search" class="form-control" name="" id="" placeholder="Search by Name/ID">
+                    </div>
+                </div>
+            </form>
+            <table id="tbl" class="table table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Salary</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+    <!-------------------------Footer------------------------->
+    <footer class="modal-footer">
+        <span>© 2019 PHENIX POS System. All rights reserved.</span>
+    </footer>
+</div>
+
+<!-----------------------scripts------------------------>
+<script>
+    $("#update").hide();
+    $("#cancel").hide();
+    $("#delete").hide();
+    $('#add').click(function () {
+        var formdata = $('#customer-form').serialize();
+        $.ajax({
+            url:"../api/service/CustomerService.php",
+            method:"POST",
+            async:true,
+            data:formdata+"&type=add"
+        }).done(function (resp) {
+            alert(resp);
+            clearAll();
+        });
+    });
+    function getAll(){
+        $('#tbl tbody').html("");
+        $.ajax({
+            url:"../api/service/CustomerService.php",
+            method:"POST",
+            async:true,
+            data:"type=getall",
+            dataType:"json"
+        }).done(function (resp) {
+            for (var i in resp) {
+                var temp=resp[i];
+                $('#tbl tbody').append(
+                    "<tr>" +
+                        "<td>"+temp[0]+"</td>"+
+                        "<td>"+temp[1]+"</td>"+
+                        "<td>"+temp[2]+"</td>"+
+                        "<td>"+temp[3]+"</td>"+
+                    "</tr>"
+                );
+            }
+        });
+    }
+    $('#update').click(function () {
+        var formdata = $('#customer-form').serialize();
+        $.ajax({
+            url:"../api/service/CustomerService.php",
+            method:"POST",
+            async:true,
+            data:formdata+"&type=update"
+        }).done(function (resp) {
+            alert(resp);
+            clearAll();
+            getAll();
+        });
+    });
+    $('#delete').click(function () {
+        var formdata = $('#customer-form').serialize();
+        $.ajax({
+            url:"/../api/service/CustomerService.php",
+            method:"POST",
+            async:true,
+            data:formdata+"&type=delete"
+        }).done(function (resp) {
+            alert(resp);
+            clearAll();
+            getAll();
+        });
+    });
+
+    $(document).ready(function () {
+        getAll();
+        $("table tbody").on("click",'tr',function (e) {
+            var row=$(this);
+            $("#update").show();
+            $("#cancel").show();
+            $("#delete").show();
+            $("#add").hide();
+            displayRow(row);
+        });
+        $('#cancel').click(function () {
+            cancelFunc();
+        });
+    });
+    function cancelFunc() {
+        $("#update").hide();
+        $("#cancel").hide();
+        $("#delete").hide();
+        $("#add").show();
+        clearAll();
+    }
+    function displayRow(x) {
+        var cols=$(x).children("td");
+        var i=0;
+        $("input").each(function (e) {
+            $(this).val($(cols[i]).text());
+            i++;
+        });
+    }
+    function clearAll() {
+        $("input").each(function (e) {
+            $(this).val("");
+        })
+    }
+</script>
+</body>
+</html>

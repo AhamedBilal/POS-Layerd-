@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PHENIX|DashBoard</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome-free-5.8.2-web/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+
+</head>
+<body>
+<!-----------------nav_st------------------------------->
+<nav class="navbar m_navbar fixed-top">
+    <div id="logo">
+    </div>
+    <div id="acc"></div>
+</nav>
+<div id="side_nav">
+
+    <ul>
+        <li><a href="index.html" class="m_active"><i class="fas fa-tachometer-alt"></i>DashBoard</a></li>
+        <li><a href="customers.html"><i class="fas fa-users"></i>Customers</a></li>
+        <li><a href="items.html"><i class="fas fa-cubes"></i>Items</a></li>
+        <li><a href="orders.html"><i class="fas fa-notes-medical"></i>Order</a></li>
+        <li><a href="reports.html"><i class="fas fa-chart-line"></i>Reports</a></li>
+    </ul>
+
+</div>
+<!--------------------Body------------------------------>
+<div class="m_content" style="padding-top: 20px">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <a href="#">
+                <div class="small-box color1">
+                    <div class="inner">
+                        <h3>150</h3>
+
+                        <p>Orders</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <a href="#">
+                <div class="small-box color2">
+                    <div class="inner">
+                        <h3>100</h3>
+
+                        <p>Customers</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <a href="#">
+                <div class="small-box color3">
+                    <div class="inner">
+                        <h3>85%</h3>
+
+                        <p>Growth</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <a href="#">
+                <div class="small-box color4">
+                    <div class="inner">
+                        <h3>1.5k</h3>
+
+                        <p>Items</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="container row">
+            <div class="col-lg-6 col-xs-12">
+                <div class="m_shadow">
+                <canvas id="myChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xs-12">
+                <div class="m_shadow">
+                    <canvas id="myChart2"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------------------Footer------------------------->
+    <footer class="modal-footer">
+        <span>© 2019 PHENIX POS System. All rights reserved.</span>
+    </footer>
+</div>
+
+<!-----------------------scripts------------------------>
+<script src="js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

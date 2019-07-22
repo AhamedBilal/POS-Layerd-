@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PHENIX|Orders</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome-free-5.8.2-web/css/all.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+<!-----------------nav_st------------------------------->
+<nav class="navbar m_navbar fixed-top">
+    <div id="logo">
+    </div>
+    <div id="acc"></div>
+</nav>
+<div id="side_nav">
+
+    <ul>
+        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i>DashBoard</a></li>
+        <li><a href="customers.html"><i class="fas fa-users"></i>Customers</a></li>
+        <li><a href="items.html"><i class="fas fa-cubes"></i>Items</a></li>
+        <li><a href="orders.html" class="m_active"><i class="fas fa-notes-medical"></i>Order</a></li>
+        <li><a href="reports.html"><i class="fas fa-chart-line"></i>Reports</a></li>
+    </ul>
+
+</div>
+<!--------------------Body------------------------------>
+<div class="m_content">
+        <div class="card-header">
+            <h3>Place Order</h3>
+        </div>
+        <div class="m_card">
+            <form id="order_form">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>OrderID</label>
+                        <input type="text" name="oid" id="oid" class="form-control" placeholder="First Name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Select Customer</label>
+                        <select id="cid" name="cid" class="form-control">
+                            <option selected>Choose Customer...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Select Item</label>
+                            <select id="item" class="form-control" name="code">
+                                <option selected>Choose ITEM...</option>
+                            </select>
+                        </div>
+                    <div class="form-group col-md-6">
+                        <label>ItemName</label>
+                        <input id="itemName" type="text" class="form-control" disabled placeholder="ItemName">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>Avilable Qty</label>
+                        <input id="avi_qty" type="text" disabled class="form-control" placeholder="Qty">
+                    </div>
+                    <div class="form-group col">
+                        <label>Unit Price</label>
+                        <input id="price" type="text" class="form-control" placeholder="Price" disabled>
+                    </div>
+                    <div class="form-group col">
+                        <label>Buying Qty</label>
+                        <input id="qty" type="text" class="form-control" placeholder="Qty">
+                    </div>
+                    <div class="form-group col-12">
+                    <button id="addToCart" class="btn btn-success float-right" type="button">Add To Cart</button>
+                    </div>
+                </div>
+                <table id="tbl" class="table table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ItemCode</th>
+                        <th scope="col">ItemName</th>
+                        <th scope="col">Qty</th>
+                        <th scope="col">UnitPrice</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class="form-row bg-secondary card-body rounded">
+                        <h3 id="tot">Total : 00.00</h3>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px">
+                <button type="button" id="place_order" class="btn btn-primary float-right">Place Order</button>
+                </div>
+            </form>
+
+            <table id="tbl-od" class="table table-hover" style="margin-top: 100px">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">OrderID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">CustomerID</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+
+    <!-------------------------Footer------------------------->
+    <footer class="modal-footer">
+        <span>© 2019 PHENIX POS System. All rights reserved.</span>
+    </footer>
+</div>
+
+<!-----------------------scripts------------------------>
+<script src="js/bootstrap.min.js"></script>
+<script>
+loadItems();
+loadCustomers();
+getAll();
+function clearAll() {
+    $('input').val("");
+    $('#tbl tbody').html("");
+    $('#tot').text("Total : 00.00");
+    getAll();
+}
+function getAll(){
+    $('#tbl-od tbody').html("");
+    $.ajax({
+        url:"../api/service/OrderService.php",
+        method:"POST",
+        async:true,
+        data:"type=getall",
+        dataType:"json"
+    }).done(function (resp) {
+        for (var i in resp) {
+            var temp=resp[i];
+            $('#tbl-od tbody').append(
+                "<tr>" +
+                "<td>"+temp[0]+"</td>"+
+                "<td>"+temp[1]+"</td>"+
+                "<td>"+temp[2]+"</td>"+
+                "</tr>"
+            );
+        }
+    });
+}
+function loadItems() {
+    $.ajax({
+        url:"../api/service/ItemService.php",
+        method:"POST",
+        async:true,
+        data:"type=getall",
+        dataType:"json"
+    }).done(function (res) {
+        for (var i of  res){
+            $('#item').append("<option>"+i[0]+"</option>");
+        }
+    });
+}
+function loadCustomers() {
+    $.ajax({
+        url: "../api/service/CustomerService.php",
+        method: "POST",
+        async: true,
+        data: "type=getall",
+        dataType: "json"
+    }).done(function (res) {
+        for (var i of  res){
+            $('#cid').append("<option>"+i[0]+"</option>");
+        }
+    });
+}
+$('#item').change(function () {
+    var formdata = $('#order_form').serialize();
+    $.ajax({
+        url: "../api/service/ItemService.php",
+        method: "POST",
+        async: true,
+        data: formdata+"&type=search",
+        dataType:'json'
+    }).done(function (data) {
+        $('#itemName').val(data[1]);
+        $('#avi_qty').val(data[2]);
+        $('#price').val(data[3]);
+    });
+});
+$('#addToCart').click(function () {
+
+    var bol=false;
+    var row;
+    var newQ=Number.parseInt($("#qty").val());
+    $("#tbl tbody tr").each(function () {
+        if ( $(this).find("td:first").text() == $("#item").val() ){
+            bol=true;
+            row=$(this);
+            return;
+        }
+    });
+    //updating data base
+    //updateItemVal();
+    // function updateItemVal() {
+    //     itemdata =$('#order_form').serialize();
+    //     var x = $('#avi_qty').val() - $('#qty').val();
+    //     $.ajax({
+    //         url: "db/order-form.php",
+    //         method: "POST",
+    //         async: true,
+    //         data: itemdata + "&qty="+x+"&type=updateitem",
+    //         dataType: 'json'
+    //     }).done(function () {
+    //         $('#item').trigger('change');
+    //     });
+    // }
+    if (bol) {
+        var oldQ =Number.parseInt($(row).find("td:eq(2)").text());
+        $(row).find("td:eq(2)").text(newQ+oldQ);
+    }else {
+        $('#tbl tbody').append(
+            "<tr>" +
+            "<td>" + $('#item').val() + "</td>" +
+            "<td>" + $('#itemName').val() + "</td>" +
+            "<td>" + $('#qty').val() + "</td>" +
+            "<td>" + $('#price').val() + "</td>" +
+            "</tr>"
+        );
+    }
+    countTotal();
+});
+$('#tbl tbody').on('click','tr',function () {
+    $('#item').val($(this).find("td:eq(0)").text());
+    $('#itemName').val($(this).find("td:eq(1)").text());
+    $('#qty').val($(this).find("td:eq(2)").text());
+    $('#price').val($(this).find("td:eq(3)").text());
+});
+
+function countTotal() {
+    var tot=0;
+    $("#tbl tbody tr").each(function () {
+        var qty = parseInt($(this).find("td:eq(2)").text());
+        var  price =parseFloat($(this).find("td:eq(3)").text());
+
+        tot+=qty*price;
+    });
+    $("#tot").text("Total : "+tot);
+}
+$('#place_order').click(function () {
+    var tableData=[];
+    $('#tbl tbody tr').each(function () {
+        var itemcode= $(this).find("td:eq(0)").text(),
+        qty=parseInt($(this).find("td:eq(2)").text()),
+        unitprice=parseFloat($(this).find("td:eq(3)").text());
+        tableData.push({
+            code:itemcode,
+            qty:qty,
+            price:unitprice
+        });
+    });
+    var tbldata=JSON.stringify(tableData);
+    var orderdata=$('#order_form').serialize();
+    $.ajax({
+        url: "../api/service/OrderService.php",
+        method: "POST",
+        async: true,
+        data: orderdata+"&type=add&x="+tbldata
+    }).done(function (res) {
+        alert(res);
+        clearAll();
+    });
+});
+</script>
+
+</body>
+</html>
