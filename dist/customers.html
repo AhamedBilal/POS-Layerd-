@@ -146,7 +146,7 @@
     $('#delete').click(function () {
         var formdata = $('#customer-form').serialize();
         $.ajax({
-            url:"/../api/service/CustomerService.php",
+            url:"../api/service/CustomerService.php",
             method:"POST",
             async:true,
             data:formdata+"&type=delete"
